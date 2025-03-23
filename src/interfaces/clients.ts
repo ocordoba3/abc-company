@@ -8,10 +8,6 @@ export interface Client {
   medical_status: MedicalStatus;
 }
 
-export enum MedicalStatus {
-  Active = "Active",
-  Pending = "Pending",
-  InProgress = "In Progress",
-}
+export type MedicalStatus = "Active" | "Pending" | "In Progress";
 
 export type ClientTabType = "detail" | "expenses";

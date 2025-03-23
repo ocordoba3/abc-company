@@ -6,33 +6,26 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import useStoreDialogs from "../../store/dialogs";
 
-interface Props {
-  open: boolean;
-  handleClose: VoidFunction;
-  handleSubmit: () => Promise<void>;
-  title: string;
-  description: string;
-}
+const ConfirmDialog = () => {
+  const { confirmDialog, setConfirmDialog } = useStoreDialogs();
 
-const ConfirmDialog = ({
-  open,
-  handleClose,
-  handleSubmit,
-  title,
-  description,
-}: Props) => {
+  async function handleClose() {
+    setConfirmDialog(null);
+  }
+
   return (
     <Dialog
-      open={open}
+      open={Boolean(confirmDialog)}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{confirmDialog?.title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {description}
+          {confirmDialog?.description}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -48,7 +41,7 @@ const ConfirmDialog = ({
           color="secondary"
           variant="contained"
           size="small"
-          onClick={() => handleSubmit()}
+          onClick={() => confirmDialog?.handleSubmit()}
           autoFocus
         >
           Ok

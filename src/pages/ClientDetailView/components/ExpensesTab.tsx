@@ -8,16 +8,15 @@ import Table from "../../../components/Table";
 import useFetch from "../../../hooks/useFetch";
 import { useState } from "react";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
-import ConfirmDialog from "../../../components/ConfirmDialog";
 import AddExpenseDialog from "./AddExpenseDialog";
+import useStoreDialogs from "../../../store/dialogs";
 
 const ExpensesTab = () => {
   const queryClient = useQueryClient();
   const { fetchInstance } = useFetch();
   const { id } = useParams();
+  const { setOpenAddExpenseDialog, setConfirmDialog } = useStoreDialogs();
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>([]);
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const { data, isFetching } = useQuery<Expense[]>({
     enabled: Boolean(id),
@@ -35,12 +34,8 @@ const ExpensesTab = () => {
     },
   });
 
-  async function handleCloseAddModal() {
-    setOpenAddModal(false);
-  }
-
   async function handleCloseDeleteModal() {
-    setOpenDeleteModal(false);
+    setConfirmDialog(null);
   }
 
   async function handleDelete() {
@@ -51,13 +46,24 @@ const ExpensesTab = () => {
     handleCloseDeleteModal();
   }
 
+  function handleConfirmOpen() {
+    setConfirmDialog({
+      title: "Delete Expenses",
+      description: "Are you sure you want to delete these expenses?",
+      handleSubmit: handleDelete,
+    });
+  }
+
   return (
     <>
       <div className="mb-8 flex justify-end items-center">
         {selectedRows.length > 0 && (
           <Button
-            onClick={() => setOpenDeleteModal(true)}
-            sx={{ marginRight: "1rem", opacity: "0.8" }}
+            onClick={handleConfirmOpen}
+            sx={{
+              marginRight: "1rem",
+              backgroundColor: "#E17100",
+            }}
             size="small"
             variant="contained"
             color="error"
@@ -66,7 +72,7 @@ const ExpensesTab = () => {
           </Button>
         )}
         <Button
-          onClick={() => setOpenAddModal(true)}
+          onClick={() => setOpenAddExpenseDialog()}
           size="small"
           variant="contained"
           color="secondary"
@@ -85,17 +91,8 @@ const ExpensesTab = () => {
         />
       </div>
 
-      {/* Modal to confirm and remove the expense */}
-      <ConfirmDialog
-        open={openDeleteModal}
-        handleClose={handleCloseDeleteModal}
-        title="Delete Expenses"
-        description="Are you sure you want to delete these expenses?"
-        handleSubmit={handleDelete}
-      />
-
       {/* Modal to add an expense */}
-      <AddExpenseDialog open={openAddModal} handleClose={handleCloseAddModal} />
+      <AddExpenseDialog />
     </>
   );
 };

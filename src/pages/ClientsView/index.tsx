@@ -12,12 +12,15 @@ import useFetch from "../../hooks/useFetch";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useMemo, useState } from "react";
 import { MdClear } from "react-icons/md";
+import MedicalStatusFilter from "./components/MedicalStatusFilter";
+import useStoreFilters from "../../store/filters";
 
 const ClientsView = () => {
   const { fetchInstance } = useFetch();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebounce(searchQuery, 1000);
+  const { medicalStatus } = useStoreFilters();
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const { data, isFetching } = useQuery<Client[]>({
     queryKey: ["clients"],
@@ -25,17 +28,17 @@ const ClientsView = () => {
     staleTime: Infinity,
   });
 
-  const clientsList = useMemo(
-    () =>
-      data
-        ? data?.filter((client) =>
-            client.client_name
-              .toLowerCase()
-              .includes(debouncedSearchQuery.toLowerCase())
-          )
-        : [],
-    [data, debouncedSearchQuery]
-  );
+  const clientsList = useMemo(() => {
+    if (!data) return [];
+
+    const searchQuery = debouncedSearchQuery.toLowerCase();
+
+    return data.filter(
+      (client) =>
+        client.client_name.toLowerCase().includes(searchQuery) &&
+        (medicalStatus === null || client.medical_status === medicalStatus)
+    );
+  }, [data, debouncedSearchQuery, medicalStatus]);
 
   if (isFetching) {
     return (
@@ -50,33 +53,37 @@ const ClientsView = () => {
       {/* Title and search bar */}
       <div className="mb-4 flex justify-between items-center">
         <h1 className="font-bold text-3xl w-1/2">Clients</h1>
-        <TextField
-          value={searchQuery}
-          sx={{
-            "& .MuiInputBase-root": {
-              borderRadius: "20px",
-            },
-          }}
-          size="small"
-          className="w-1/3"
-          placeholder="Search by client name..."
-          slotProps={{
-            input: {
-              startAdornment: (
-                <BiSearch size={24} className="text-gray-400 mr-2" />
-              ),
-              endAdornment: (
-                <MdClear
-                  onClick={() => setSearchQuery("")}
-                  size={24}
-                  className="text-gray-400 mr-2 cursor-pointer"
-                />
-              ),
-              className: "h-10",
-            },
-          }}
-          onChange={({ target: { value } }) => setSearchQuery(value)}
-        />
+
+        <div className="flex items-center justify-end w-1/2">
+          <MedicalStatusFilter />
+          <TextField
+            value={searchQuery}
+            sx={{
+              "& .MuiInputBase-root": {
+                borderRadius: "20px",
+              },
+            }}
+            size="small"
+            className="w-2/3"
+            placeholder="Search by client name..."
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <BiSearch size={24} className="text-gray-400 mr-2" />
+                ),
+                endAdornment: (
+                  <MdClear
+                    onClick={() => setSearchQuery("")}
+                    size={24}
+                    className="text-gray-400 mr-2 cursor-pointer"
+                  />
+                ),
+                className: "h-10",
+              },
+            }}
+            onChange={({ target: { value } }) => setSearchQuery(value)}
+          />
+        </div>
       </div>
 
       {/* Clients list */}

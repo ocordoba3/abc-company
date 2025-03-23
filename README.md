@@ -19,7 +19,8 @@ The application uses [Fake API](https://jsoning.com/api/) to provide and manage 
 
 ## API Requests & State Management
 
-All API requests are handled using [React Query](https://tanstack.com/query/latest). Since React Query also manages data state, additional state management tools like Zustand or Context API are not required.
+All API requests are handled using [React Query](https://tanstack.com/query/latest). React Query manages data state.
+[Zustand](https://zustand-demo.pmnd.rs/) handles other specifics App states.
 
 ## Component Library
 

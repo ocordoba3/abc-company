@@ -44,8 +44,8 @@ const ClientDetailView = () => {
               "& .Mui-selected": {
                 backgroundColor: "#ffffff",
                 borderRadius: "16px 16px 0 0",
-                color: "#62159B",
-                fontWeight: "bold",
+                color: "#62159B !important",
+                fontWeight: "bold !important",
               },
               "& .MuiTabs-indicator": {
                 display: "none",

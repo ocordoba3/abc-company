@@ -46,6 +46,9 @@ const Table = ({ columns, rows, ...rest }: Props) => {
         "& .MuiDataGrid-selectedRowCount": {
           display: "none",
         },
+        "& .MuiButtonBase-root.MuiCheckbox-root": {
+          color: "#62159b",
+        },
       }}
       slots={{ noRowsOverlay: Empty }}
       {...rest}

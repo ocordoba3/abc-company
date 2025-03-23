@@ -9,17 +9,13 @@ import { Expense } from "../../../interfaces/expenses";
 import useFetch from "../../../hooks/useFetch";
 import { FormControl, InputAdornment, MenuItem, Select } from "@mui/material";
 import { useParams } from "react-router-dom";
+import useStoreDialogs from "../../../store/dialogs";
 
-interface Props {
-  open: boolean;
-  handleClose: VoidFunction;
-}
-
-const AddExpenseDialog = ({ open, handleClose }: Props) => {
+const AddExpenseDialog = () => {
   const { id } = useParams();
-  const queryClient = useQueryClient();
-
   const { fetchInstance } = useFetch();
+  const queryClient = useQueryClient();
+  const { openAddExpenseDialog, setOpenAddExpenseDialog } = useStoreDialogs();
 
   const { mutateAsync: saveExpense, isPending } = useMutation({
     mutationKey: ["save-expense"],
@@ -27,7 +23,7 @@ const AddExpenseDialog = ({ open, handleClose }: Props) => {
       fetchInstance(`/expenses`, "POST", expense),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
-      handleClose();
+      setOpenAddExpenseDialog();
     },
   });
 
@@ -35,8 +31,8 @@ const AddExpenseDialog = ({ open, handleClose }: Props) => {
     <Dialog
       fullWidth
       maxWidth="xs"
-      open={open}
-      onClose={handleClose}
+      open={openAddExpenseDialog}
+      onClose={setOpenAddExpenseDialog}
       slotProps={{
         paper: {
           component: "form",
