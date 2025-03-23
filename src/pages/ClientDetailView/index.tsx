@@ -67,7 +67,7 @@ const ClientDetailView = () => {
           <>
             {tabs.map((tab) => (
               <TabPanel
-                className="bg-white w-full h-[calc(100vh-12rem)] rounded-b-xl"
+                className="bg-white w-full h-[calc(100vh-10rem)] rounded-b-xl"
                 key={tab.value}
                 value={tab.value}
               >

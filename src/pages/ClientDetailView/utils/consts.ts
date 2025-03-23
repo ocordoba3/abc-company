@@ -4,7 +4,7 @@ import { transformDate } from "../../../helpers/functions";
 
 export const columns: GridColDef[] = [
   {
-    field: "name",
+    field: "id",
     headerName: "Label",
     width: 400,
     align: "center",

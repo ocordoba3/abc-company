@@ -63,15 +63,11 @@ const ClientsView = () => {
 
       {/* Clients list */}
       <div className="w-full h-[calc(100vh-16rem)]">
-        {data && data.length > 0 && (
-          <Table
-            rows={data}
-            columns={columns}
-            onRowClick={(params) =>
-              navigate(PATHS.clientById(String(params.id)))
-            }
-          />
-        )}
+        <Table
+          rows={data || []}
+          columns={columns}
+          onRowClick={(params) => navigate(PATHS.clientById(String(params.id)))}
+        />
       </div>
     </div>
   );
