@@ -1,7 +1,8 @@
-import { PATHS } from "@/router/paths";
 import { MdOutlineDashboard } from "react-icons/md";
 import { LuUserRoundSearch } from "react-icons/lu";
 import { AiOutlineUserAdd } from "react-icons/ai";
+
+import { PATHS } from "../../../router/paths";
 
 export const drawerWidth = 200;
 
