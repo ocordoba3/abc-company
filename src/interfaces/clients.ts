@@ -1,11 +1,12 @@
 export interface Client {
-  id: string;
   client_name: string;
-  doa: Date;
-  medical_status: MedicalStatus;
   client_status: boolean;
+  doa: Date;
+  dob: Date;
+  expenses: Expense[];
+  id: string;
   law_firm: string;
-  birthday: Date;
+  medical_status: MedicalStatus;
 }
 
 export enum MedicalStatus {
@@ -13,3 +14,18 @@ export enum MedicalStatus {
   Scheduled = "Scheduled",
   Signed = "Signed",
 }
+
+export interface Expense {
+  name: string;
+  doc: Date;
+  amount: number;
+  deducted_from: DeductedFrom;
+  client: string;
+}
+
+export enum DeductedFrom {
+  ClientSettlement = "Client Settlement",
+  NotDeducted = "Not Deducted",
+}
+
+export type ClientTabType = "detail" | "expenses";

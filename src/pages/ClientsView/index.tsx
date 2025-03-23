@@ -1,59 +1,32 @@
 import { BiSearch } from "react-icons/bi";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { Client } from "@/interfaces/clients";
-import { fetchClients } from "@/helpers/fetchClients";
-import Empty from "@/components/Empty";
-import { useNavigate } from "react-router-dom";
-import { PATHS } from "@/router/paths";
+import { Client } from "../../interfaces/clients";
+import { columns } from "./utils/consts";
+import { PATHS } from "../../router/paths";
+import Empty from "../../components/Empty";
+import useFetch from "../../hooks/useFetch";
+import LoadingSkeleton from "../../components/LoadingSkeleton";
 
 const ClientsView = () => {
+  const { fetchInstance } = useFetch();
   const navigate = useNavigate();
-  // Access the client
-  //   const queryClient = useQueryClient();
 
-  // Queries
-  const { data } = useQuery<Client[]>({
+  const { data, isFetching } = useQuery<Client[]>({
     queryKey: ["clients"],
-    queryFn: fetchClients,
+    queryFn: () => fetchInstance("/clients") as Promise<Client[]>,
   });
 
-  const columns: GridColDef[] = [
-    {
-      field: "client_name",
-      headerName: "Client Name",
-      width: 400,
-    },
-    {
-      field: "doa",
-      headerName: "DOA",
-      width: 150,
-      valueFormatter: (value: Date) =>
-        new Intl.DateTimeFormat("en-US", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "numeric",
-        }).format(new Date(value)),
-    },
-    {
-      field: "medical_status",
-      headerName: "Medical Status",
-      width: 150,
-    },
-    {
-      field: "client_status",
-      headerName: "Case Status",
-      width: 150,
-      valueFormatter: (value: boolean) => (value ? "Active" : "Inactive"),
-    },
-    {
-      field: "law_firm",
-      headerName: "Law Firm",
-      width: 300,
-    },
-  ];
+  if (isFetching) {
+    return (
+      <div className="bg-white w-full h-[calc(100vh-10rem)] rounded-b-xl p-8">
+        <LoadingSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-lg shadow-md p-4 bg-white">
@@ -68,7 +41,7 @@ const ClientsView = () => {
           }}
           size="small"
           className="w-1/3"
-          placeholder="Search..."
+          placeholder="Search Clients..."
           slotProps={{
             input: {
               startAdornment: (
@@ -80,17 +53,17 @@ const ClientsView = () => {
         />
       </div>
       {/* Action buttons */}
-      <div className="mb-4 flex justify-between items-center">
-        <button className="bg-purple-300 text-purple-900 text-sm cursor-pointer rounded-3xl py-2 px-4">
+      <div className="mb-8 flex justify-between items-center">
+        <Button size="small" variant="contained" color="secondary">
           Filter Clients
-        </button>
-        <button className="bg-purple-300 text-purple-900 text-sm cursor-pointer rounded-3xl py-2 px-4">
+        </Button>
+        <Button size="small" variant="contained" color="secondary">
           Add Clients
-        </button>
+        </Button>
       </div>
 
       {/* Clients list */}
-      <div className="w-full h-[calc(100vh-15rem)]">
+      <div className="w-full h-[calc(100vh-16rem)]">
         {data && data.length > 0 && (
           <DataGrid
             getRowClassName={() =>

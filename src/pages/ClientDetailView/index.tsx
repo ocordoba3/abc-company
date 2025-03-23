@@ -1,17 +1,43 @@
-import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Tab } from "@mui/material";
-import React from "react";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { useState } from "react";
+
+import { Client, ClientTabType } from "../../interfaces/clients";
+import DetailTab from "./components/DetailTab";
+import ExpensesTab from "./components/ExpensesTab";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import LoadingSkeleton from "../../components/LoadingSkeleton";
+import useFetch from "../../hooks/useFetch";
 
 const ClientDetailView = () => {
-  const [value, setValue] = React.useState("1");
+  const { id } = useParams();
+  const { fetchInstance } = useFetch();
+  const [currentTab, setCurrentTab] = useState<ClientTabType>("detail");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  const { isFetching } = useQuery<Client>({
+    enabled: Boolean(id),
+    queryKey: ["client-detail", id],
+    queryFn: () => fetchInstance(`/clients/${id}`) as Promise<Client>,
+    staleTime: Infinity,
+  });
+
+  const tabs = [
+    {
+      label: "Details",
+      component: <DetailTab />,
+      value: "detail" as ClientTabType,
+    },
+    {
+      label: "Expenses",
+      component: <ExpensesTab />,
+      value: "expenses" as ClientTabType,
+    },
+  ];
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
-      <TabContext value={value}>
+      <TabContext value={currentTab}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList
             sx={{
@@ -23,15 +49,31 @@ const ClientDetailView = () => {
                 display: "none",
               },
             }}
-            onChange={handleChange}
+            onChange={(_, newValue) => setCurrentTab(newValue)}
             aria-label="lab API tabs example"
           >
-            <Tab label="Details" value="1" />
-            <Tab label="Expenses" value="2" />
+            {tabs.map((tab) => (
+              <Tab key={tab.value} label={tab.label} value={tab.value} />
+            ))}
           </TabList>
         </Box>
-        <TabPanel value="1">Item One</TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
+        {isFetching ? (
+          <div className="bg-white w-full h-[calc(100vh-12rem)] rounded-b-xl p-4">
+            <LoadingSkeleton />
+          </div>
+        ) : (
+          <>
+            {tabs.map((tab) => (
+              <TabPanel
+                className="bg-white w-full h-[calc(100vh-12rem)] rounded-b-xl"
+                key={tab.value}
+                value={tab.value}
+              >
+                {tab.component}
+              </TabPanel>
+            ))}
+          </>
+        )}
       </TabContext>
     </Box>
   );

@@ -8,6 +8,7 @@
     "skipLibCheck": true,
     "incremental": true,
     "composite": true,
+    "allowSyntheticDefaultImports": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
