@@ -9,9 +9,9 @@ export interface Client {
 }
 
 export enum MedicalStatus {
-  ReadyForAssignment = "Ready for Assignment",
-  Scheduled = "Scheduled",
-  Signed = "Signed",
+  Active = "Active",
+  Pending = "Pending",
+  InProgress = "In Progress",
 }
 
 export type ClientTabType = "detail" | "expenses";

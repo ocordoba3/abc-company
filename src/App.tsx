@@ -1,19 +1,14 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import Router from "./router";
+import { Outlet } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+import { Suspense } from "react";
 
 function App() {
-  const queryClient = new QueryClient();
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Sidebar>
-          <Router />
-        </Sidebar>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <Suspense fallback={<></>}>
+      <Sidebar>
+        <Outlet />
+      </Sidebar>
+    </Suspense>
   );
 }
 

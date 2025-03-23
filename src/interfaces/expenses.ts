@@ -1,6 +1,6 @@
 export interface Expense {
   id: string;
-  doc: Date;
+  doc: Date | string;
   amount: number;
   deducted_from: DeductedFrom;
   client: string;

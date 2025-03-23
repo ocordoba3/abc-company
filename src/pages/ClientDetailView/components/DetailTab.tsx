@@ -19,15 +19,15 @@ const DetailTab = () => {
   return (
     <div className="grid grid-cols-2 p-12">
       <div>
-        <h3 className="text-lg text-gray-400">Client Name</h3>
+        <h3 className="text-base text-gray-400">Client Name</h3>
         <h2 className="text-xl text-black mb-8 pl-4">{data?.client_name}</h2>
 
-        <h3 className="text-lg text-gray-400">Date of Birth</h3>
+        <h3 className="text-base text-gray-400">Date of Birth</h3>
         <h2 className="text-xl text-black mb-8 pl-4">
           {transformDate(data?.dob || "")}
         </h2>
 
-        <h3 className="text-lg text-gray-400">Date of Incident</h3>
+        <h3 className="text-base text-gray-400">Date of Incident</h3>
         <h2 className="text-xl text-black pl-4">
           {transformDate(data?.doa || "")}
         </h2>

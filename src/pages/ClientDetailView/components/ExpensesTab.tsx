@@ -9,13 +9,15 @@ import useFetch from "../../../hooks/useFetch";
 import { useState } from "react";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
 import ConfirmDialog from "../../../components/ConfirmDialog";
+import AddExpenseDialog from "./AddExpenseDialog";
 
 const ExpensesTab = () => {
   const queryClient = useQueryClient();
   const { fetchInstance } = useFetch();
   const { id } = useParams();
   const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel>([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const { data, isFetching } = useQuery<Expense[]>({
     enabled: Boolean(id),
@@ -33,8 +35,12 @@ const ExpensesTab = () => {
     },
   });
 
-  async function handleClose() {
-    setOpenConfirm(false);
+  async function handleCloseAddModal() {
+    setOpenAddModal(false);
+  }
+
+  async function handleCloseDeleteModal() {
+    setOpenDeleteModal(false);
   }
 
   async function handleDelete() {
@@ -42,7 +48,7 @@ const ExpensesTab = () => {
       await deleteExpense(String(row));
     }
 
-    handleClose();
+    handleCloseDeleteModal();
   }
 
   return (
@@ -50,7 +56,7 @@ const ExpensesTab = () => {
       <div className="mb-8 flex justify-end items-center">
         {selectedRows.length > 0 && (
           <Button
-            onClick={() => setOpenConfirm(true)}
+            onClick={() => setOpenDeleteModal(true)}
             sx={{ marginRight: "1rem", opacity: "0.8" }}
             size="small"
             variant="contained"
@@ -59,7 +65,12 @@ const ExpensesTab = () => {
             Delete
           </Button>
         )}
-        <Button size="small" variant="contained" color="secondary">
+        <Button
+          onClick={() => setOpenAddModal(true)}
+          size="small"
+          variant="contained"
+          color="secondary"
+        >
           Add Expense
         </Button>
       </div>
@@ -69,26 +80,22 @@ const ExpensesTab = () => {
           columns={columns}
           checkboxSelection
           rowSelection
-          rows={
-            data
-              ? data
-                  .filter((expense) => expense.client === id)
-                  .map((expense) => ({
-                    ...expense,
-                    id: expense.id,
-                  }))
-              : []
-          }
+          rows={data ? data.filter((expense) => expense.client === id) : []}
           onRowSelectionModelChange={(val) => setSelectedRows(val)}
         />
       </div>
+
+      {/* Modal to confirm and remove the expense */}
       <ConfirmDialog
-        open={openConfirm}
-        handleClose={handleClose}
+        open={openDeleteModal}
+        handleClose={handleCloseDeleteModal}
         title="Delete Expenses"
         description="Are you sure you want to delete these expenses?"
         handleSubmit={handleDelete}
       />
+
+      {/* Modal to add an expense */}
+      <AddExpenseDialog open={openAddModal} handleClose={handleCloseAddModal} />
     </>
   );
 };

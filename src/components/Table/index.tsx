@@ -35,13 +35,16 @@ const Table = ({ columns, rows, ...rest }: Props) => {
           borderBottom: "none !important",
         },
         "& .MuiDataGrid-filler": {
-          borderBottom: "none !important",
+          display: "none !important",
         },
         "& .MuiDataGrid-columnSeparator": {
           display: "none",
         },
         "& .MuiDataGrid-footerContainer": {
           borderTop: "none",
+        },
+        "& .MuiDataGrid-selectedRowCount": {
+          display: "none",
         },
       }}
       slots={{ noRowsOverlay: Empty }}
