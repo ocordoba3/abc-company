@@ -1,15 +1,14 @@
 import { BiSearch } from "react-icons/bi";
 import { Button, TextField } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { Client } from "../../interfaces/clients";
 import { columns } from "./utils/consts";
 import { PATHS } from "../../router/paths";
-import Empty from "../../components/Empty";
-import useFetch from "../../hooks/useFetch";
 import LoadingSkeleton from "../../components/LoadingSkeleton";
+import Table from "../../components/Table";
+import useFetch from "../../hooks/useFetch";
 
 const ClientsView = () => {
   const { fetchInstance } = useFetch();
@@ -65,36 +64,9 @@ const ClientsView = () => {
       {/* Clients list */}
       <div className="w-full h-[calc(100vh-16rem)]">
         {data && data.length > 0 && (
-          <DataGrid
-            getRowClassName={() =>
-              "bg-blue-50 my-1 border-t-0 rounded-xl hover:!bg-green-50 cursor-pointer"
-            }
-            getCellClassName={() => "!border-t-0"}
+          <Table
             rows={data}
             columns={columns}
-            autoPageSize
-            sx={{
-              border: 0,
-              "& .MuiDataGrid-cell.MuiDataGrid-cellEmpty": {
-                borderTop: "none",
-              },
-              "& .MuiDataGrid-columnHeaderTitle": {
-                fontWeight: "700 !important",
-              },
-              "& .MuiDataGrid-columnHeader": {
-                borderBottom: "none !important",
-              },
-              "& .MuiDataGrid-filler": {
-                borderBottom: "none !important",
-              },
-              "& .MuiDataGrid-columnSeparator": {
-                display: "none",
-              },
-              "& .MuiDataGrid-footerContainer": {
-                borderTop: "none",
-              },
-            }}
-            slots={{ noRowsOverlay: Empty }}
             onRowClick={(params) =>
               navigate(PATHS.clientById(String(params.id)))
             }

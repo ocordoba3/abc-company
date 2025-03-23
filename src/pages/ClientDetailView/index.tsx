@@ -38,12 +38,14 @@ const ClientDetailView = () => {
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={currentTab}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box>
           <TabList
             sx={{
               "& .Mui-selected": {
                 backgroundColor: "#ffffff",
                 borderRadius: "16px 16px 0 0",
+                color: "#62159B",
+                fontWeight: "bold",
               },
               "& .MuiTabs-indicator": {
                 display: "none",
