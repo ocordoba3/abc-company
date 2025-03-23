@@ -59,7 +59,7 @@ const ClientsView = () => {
           }}
           size="small"
           className="w-1/3"
-          placeholder="Search Clients..."
+          placeholder="Search by client name..."
           slotProps={{
             input: {
               startAdornment: (
